@@ -1,0 +1,29 @@
+{
+  "name": "jira",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base",
+    "rules": {
+      "no-console": "off",
+      "no-underscore-dangle": 0
+    },
+    "env": {
+      "browser": false,
+      "node": true,
+      "jquery": false
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "axios": "^0.18.0",
+    "winston": "^3.1.0"
+  }
+}

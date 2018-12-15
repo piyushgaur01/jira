@@ -1,0 +1,14 @@
+{
+    "extends": "airbnb-base",
+    "globals": {
+    "document": true,
+    "fetch": true,
+    "window": true,
+    "$": true,
+    "console": true
+  },
+  "env": {
+    "browser": true,
+    "node": true
+    }            
+}

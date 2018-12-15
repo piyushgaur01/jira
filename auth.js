@@ -1,0 +1,1 @@
+exports.basicAuth = 'Basic cGdhdXI6T2N0QDgxMDI=';
