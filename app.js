@@ -1,34 +1,87 @@
-const async = require('async');
+/* eslint-disable no-unused-vars */
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const createError = require('http-errors');
+const jiraApi = require('./jiraApi');
 const logger = require('./logger');
-const authorization = require('./config');
+const jsonData = require('./logs/sprintReport.json');
+const config = require('./config');
 
+const app = express();
+// view engine settings
+app.set('views', path.join(__dirname, 'public/views'));
+app.set('view engine', 'ejs');
 
-const subTasks = ['Create Test Cases in SILK', 'Analyze', 'Implement', 'Code Review', 'Merge', 'QA'];
+app.use(morgan('combined', {
+  stream: logger.stream,
+}));
 
-function startLog() {
-  logger.info('****************************************');
-  logger.info(`Parent Key: ${parent.key}`);
-  logger.info(`Sub Tasks: ${subTasks}`);
-  logger.info('****************************************');
-}
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-function endLog() {
-  logger.info('****************************************');
-  logger.info('Sub Tasks created successfully!');
-  logger.info('****************************************');
-}
+app.use(express.json({ limit: '10mb', extended: true }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
+app.get('/favicon.ico', (req, res) => res.sendStatus(204));
 
-startLog();
-getParentDetails(parent.key)
-  .then((result) => {
-    logger.info(`Status: ${result.status} | Parent Key: ${result.data.key} | Parent id: ${result.data.id}`);
-    parent.components = result.data.fields.components;
-    parent.portfolioItems = result.data.fields.customfield_11002;
-    async.eachSeries(subTasks, (subTask, cb) => {
-      setTimeout(createSubTask, 300, subTask, cb);
-    }, endLog);
-  })
-  .catch((err) => {
-    logger.error('Error while fetching parent details: ', err.response.data);
+app.get('/abcd', (req, res, next) => {
+  const viewData = {
+    name: jsonData.sprint.name.split('Harman ')[1],
+    stories: {
+      count: 0,
+      storyPoints: 0,
+    },
+    defects: {
+      count: 0,
+      storyPoints: 0,
+    },
+  };
+
+  jsonData.contents.completedIssues.forEach((item) => {
+    switch (item.typeName) {
+      case 'Bug':
+        viewData.defects.count += 1;
+        viewData.defects.storyPoints += viewData.defects.storyPoints;
+        break;
+      case 'Story':
+        viewData.stories.count += 1;
+        viewData.stories.storyPoints += viewData.stories.storyPoints;
+        break;
+      case 'Task':
+        viewData.stories.count += 1;
+        viewData.stories.storyPoints += viewData.stories.storyPoints;
+        break;
+      default:
+        break;
+    }
   });
+  res.render('index.ejs', viewData);
+  next();
+});
+
+app.get('/', (req, res, next) => {
+  jiraApi.getMonthlyReport(res);
+});
+
+app.use((req, res, next) => {
+  logger.error('404 not found error');
+  next(createError(404));
+});
+
+// error handler
+app.use((err, req, res) => {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // add this line to include logger logging
+  logger.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
