@@ -88,65 +88,24 @@ function getScopeChangeBurndownChart(boardId, sprintId) {
   return axios(request);
 }
 
-async function getMonthlyReport(res) {
-  let sprints;
-  const viewData = [];
-  try {
-    sprints = await getAllSprints(config.boardId);
-    sprints = sprints.data.values.filter(sprint => (
-      ((sprint.name.indexOf('Harman') > -1) && (sprint.state !== 'future'))
-    ));
-    sprints.splice(0, sprints.length - 3);
-    const promises = [];
-    sprints.forEach((sprint) => {
-      promises.push(getSprintReport(sprint.originBoardId, sprint.id));
-    });
-    try {
-      const responses = await Promise.all(promises);
-      responses.forEach((response) => {
-        const sprintMeta = {
-          name: response.data.sprint.name.split('Harman ')[1],
-          state: response.data.sprint.state,
-          stories: {
-            count: 0,
-            storyPoints: 0,
-          },
-          defects: {
-            count: 0,
-            storyPoints: 0,
-          },
-        };
-        response.data.contents.completedIssues.forEach((item) => {
-          switch (item.typeName) {
-            case 'Bug':
-              sprintMeta.defects.count += 1;
-              sprintMeta.defects.storyPoints += item.currentEstimateStatistic.statFieldValue.value;
-              break;
-            case 'Story':
-              sprintMeta.stories.count += 1;
-              sprintMeta.stories.storyPoints += item.currentEstimateStatistic.statFieldValue.value;
-              break;
-            case 'Task':
-              sprintMeta.stories.count += 1;
-              sprintMeta.stories.storyPoints += item.currentEstimateStatistic.statFieldValue.value;
-              break;
-            default:
-              break;
-          }
-        });
-        viewData.push(sprintMeta);
-      });
-    } catch (error) {
-      logger.error(`Error in sprint reports: ${error.message}`);
-    }
-    res.render('index.ejs', { data: viewData });
-  } catch (error) {
-    logger.error(`Error in getting sprints: ${error.message}`);
-  }
+function getBacklogData() {
+  const request = {
+    method: 'GET',
+    url: `${config.jiraUrl}/rest/greenhopper/1.0/xboard/plan/backlog/data.json?rapidViewId=${config.boardId}&selectedProjectKey=${config.projectKey}`,
+    headers: {
+      Authorization: config.authHeader,
+    },
+  };
+  return axios(request);
+}
+
+function getDateInReportFormat(date) {
+  const dateArr = date.split('/');
+  return `${dateArr[0]}-${dateArr[1]}`;
 }
 
 module.exports = {
-  getAllSprints, getMonthlyReport,
+  getAllSprints, getBacklogData, getSprintReport, getDateInReportFormat,
 };
 // getAllSprints(config.boardId)
 //   .then((result) => {

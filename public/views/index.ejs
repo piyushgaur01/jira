@@ -58,35 +58,18 @@
 		</div>
 	</nav>
 	<div class="container-fluid">
-		<div class="row">
+		<div class="row" style="margin-top: 3rem">
 			<div class="col-sm-10 offset-sm-1">
 				<div class="row">
 					<div class="col-sm">
-						<h3></h3>
+						<h2>Monthly Report</h2>
+					</div>
+					<div class="lds-circle col-sm"><div></div></div>
+					<div class="col-sm"></div>
+				</div>
+				<div class="row">
+					<div class="col-sm">
 						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col"></th>
-									<% data.forEach(function(sprint){ %>
-										<th><%= sprint.name %> (<%= sprint.state %>)</th>
-									<% }); %>
-									<!-- <th scope="col">Backlog</th> -->
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row">Stories & Tasks [Story Points]</th>
-									<td><%= data[0].stories.count %> [<%= data[0].stories.storyPoints %>] </td>
-									<td><%= data[1].stories.count %> [<%= data[1].stories.storyPoints %>] </td>
-									<td><%= data[2].stories.count %> [<%= data[2].stories.storyPoints %>] </td>
-								</tr>
-								<tr>
-									<th scope="row">Defects/Bugs [Story Points]</th>
-									<td><%= data[0].defects.count %> [<%= data[0].defects.storyPoints %>] </td>
-									<td><%= data[1].defects.count %> [<%= data[1].defects.storyPoints %>] </td>
-									<td><%= data[2].defects.count %> [<%= data[2].defects.storyPoints %>] </td>
-								</tr>
-							</tbody>
 						</table>
 					</div>
 				</div>
@@ -104,7 +87,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-
+	<script src="js/ejs.min.js"></script>
 	<script src="js/main.js"></script>
 </body>
 
