@@ -40,6 +40,7 @@
         <td><%= data[0].stories.count %> [<%= data[0].stories.storyPoints %>] </td>
         <td><%= data[1].stories.count %> [<%= data[1].stories.storyPoints %>] </td>
         <td><%= data[2].stories.count %> [<%= data[2].stories.storyPoints %>] </td>
+        <td><%= data[3].stories.count %> [<%= data[3].stories.storyPoints %>] </td>
         <td><span id="backlogStoriesCount">0</span> [N/A] </td>
       </tr>
       <tr>
@@ -47,6 +48,7 @@
         <td><%= data[0].defects.count %> [<%= data[0].defects.storyPoints %>] </td>
         <td><%= data[1].defects.count %> [<%= data[1].defects.storyPoints %>] </td>
         <td><%= data[2].defects.count %> [<%= data[2].defects.storyPoints %>] </td>
+        <td><%= data[3].defects.count %> [<%= data[3].defects.storyPoints %>] </td>
         <td><span id="backlogBugsCount">0</span> [N/A] </td>
       </tr>
     </tbody>

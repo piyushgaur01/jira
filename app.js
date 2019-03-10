@@ -38,7 +38,7 @@ app.get('/getSprintsData', async (req, res, next) => {
     sprints = sprints.data.values.filter(sprint => (
       ((sprint.name.indexOf('Harman') > -1) && (sprint.state !== 'future'))
     ));
-    sprints.splice(0, sprints.length - 3);
+    sprints.splice(0, sprints.length - 4);
     const promises = [];
     sprints.forEach((sprint) => {
       promises.push(jiraApi.getSprintReport(sprint.originBoardId, sprint.id));
